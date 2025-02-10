@@ -163,23 +163,7 @@ public class Gridtiles {
             }
         }
     }
-    // NEEDS TO BE IMPLEMENTED AND CHECKED
-    public void sanitychecker(){
-        boolean sancheck = false;
-        for(ArrayList<GridItem> RL:this.gridmap){
-            for(GridItem CL:RL){
-                if(CL.getBomb()){
-                    sancheck=true;
-                }
-            }
 
-        }
-        if(!sancheck){
-            System.out.println("GAME HAS NO BOMBS");
-        }else{
-            System.out.println("GAME HAS BOMBS");
-        }
-    }
     //debug purposes
     public void selector(int x, int y){
         System.out.println(this.gridmap.get(15-y).get(x-1).getStatus());
@@ -403,12 +387,40 @@ public class Gridtiles {
             }
         }
     }
-
+    // NEEDS TO BE IMPLEMENTED AND CHECKED
+    public boolean sanitychecker(){
+        boolean sancheck = false;
+        int bombcount =0;
+        for(ArrayList<GridItem> RL:this.gridmap){
+            for(GridItem CL:RL){
+                if(CL.getBomb()){
+                    sancheck=true;
+                    bombcount=bombcount+1;
+                }
+            }
+        }
+        if(!sancheck){
+            System.out.println("GAME HAS NO BOMBS");
+            return false;
+        }else{
+            if(bombcount<((this.getRows()*this.getColumns())/15)){
+                //System.out.println("There is not enough bombs, restarting: "+bombcount+"/"+((this.getRows()*this.getColumns())/15)+" bombs");
+                this.gridmap.clear();
+                return false;
+            }else{
+                //System.out.println("There is enough bombs: "+bombcount+"/"+((this.getRows()*this.getColumns())/15)+" bombs");
+                return true;
+            }
+        }
+    }
     public static void main(String[] args) {
         Gridtiles Gameenv = new Gridtiles();
-        Gameenv.initialisemap();
-        Gameenv.initialiseStatus();
-        Gameenv.sanitychecker();
+        boolean sanity=false;
+        while(!sanity){
+            Gameenv.initialisemap();
+            Gameenv.initialiseStatus();
+            sanity = Gameenv.sanitychecker();
+        }
         Gameenv.debugreveal();
         Gameenv.DisplayMap();
         Gameenv.debugconceal();
@@ -431,9 +443,9 @@ public class Gridtiles {
     implement user interaction //// DONE
     implement game over state //// DONE
     implement game win state //// DONE
-    implement flag placer
-    implement use of sanity checker to regen map if no bombs.
-    implement change to sanity checker to also regen map if minimum number of bombs not implemented.
+    implement flag placer //// Done
+    implement use of sanity checker to regen map if no bombs. //// DONE
+    implement change to sanity checker to also regen map if minimum number of bombs not implemented. //// DONE
     implement catches for stupid user input /// done?
     implement for custom sized maps
  */

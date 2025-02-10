@@ -45,7 +45,7 @@ public class GridItem {
     }
     public GridItem(float decision){
         //System.out.println(decision);
-        if(decision<5){
+        if(decision<4){
             isBomb=true;
         }
     }
