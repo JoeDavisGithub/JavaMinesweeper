@@ -1,13 +1,16 @@
 public class GridItem {
     private int status=0;
-    private boolean revealed = true;
+    private boolean revealed = false;
     private boolean isBomb = false;
+    private boolean marked = false;
 
     public int getStatus(){
-        if(this.isBomb){
-            return 99;
-        } else if(this.revealed){
-            return this.status;
+        if(this.revealed){
+            if(this.isBomb){
+                return 99;
+            }else{
+                return this.status;
+            }
         }
         else{
             return 10;
@@ -16,12 +19,19 @@ public class GridItem {
     public void updateStatus(){
         this.status = this.status+1;
     }
+    //DEBUGTOOL
+    public void updateStatus(int db){
+        this.status = db;
+    }
     public boolean getBomb(){
         return this.isBomb;
     }
+    public void setRevealed(){
+        this.revealed=true;
+    }
     public GridItem(float decision){
         //System.out.println(decision);
-        if(decision==1){
+        if(decision==0){
             isBomb=true;
         }
     }
