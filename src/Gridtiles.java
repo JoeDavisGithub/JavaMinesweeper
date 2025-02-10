@@ -29,7 +29,7 @@ public class Gridtiles {
             for(int CC=0;CC<this.rows;CC++){
                 Random rn = new Random();
                 int decider = rn.nextInt(50);
-                System.out.println(decider);
+                //System.out.println(decider);
                 temp.add(new GridItem(decider));
             }
         this.gridmap.add(temp);
@@ -184,6 +184,10 @@ public class Gridtiles {
     }
 
     public void gameSelector(int x, int y){
+        if(this.gridmap.get(15-y).get(x-1).getBomb()){
+            this.gridmap.get(15-y).get(x-1).setRevealed();
+            return;
+        }
         if(this.gridmap.get(15-y).get(x-1).gamePeek()==0){
 
             this.gameRevealer(x-1,15-y);
@@ -295,19 +299,61 @@ public class Gridtiles {
         }
         return Integer.parseInt(uinputted);
     }
-
+    public boolean isChecked(int x,int y){
+        if(this.gridmap.get(15-y).get(x-1).isRevealed()){
+            System.out.println("This coordinate is already revealed. Try again");
+            return false;
+        }else{
+            return true;
+        }
+    }
     public void gameStep(){
-        int xval,yval;
-        System.out.print("Please enter an X coordinate between 1 and 15: ");
-        xval = gameInteraction();
-        System.out.print("Please enter a Y coordinate between 1 and 15: ");
-        yval = gameInteraction();
+        int xval=0,yval = 0;
+        boolean prog=false;
+        while(!prog) {
+            System.out.print("Please enter an X coordinate between 1 and 15: ");
+            xval = gameInteraction();
+            System.out.print("Please enter a Y coordinate between 1 and 15: ");
+            yval = gameInteraction();
+            prog = isChecked(xval,yval);
+        }
         gameSelector(xval,yval);
     }
 
     public void gameRun(){
         while(Objects.equals(this.gameState, "Playing")){
             this.gameStep();
+            this.winCheck();
+        }
+        this.debugreveal();
+        this.DisplayMap();
+        if(gameState=="Won"){
+            System.out.println("---------------You Won---------------");
+        }else{
+            System.out.println("---------------You Lost---------------");
+        }
+    }
+    public void winCheck(){
+        boolean winflag=true;
+        for(ArrayList<GridItem> RL:this.gridmap){
+            for(GridItem CL:RL){
+                if(!CL.isRevealed()){
+                    if(!CL.getBomb()){
+                        winflag=false;
+                    }
+                }
+                if(CL.isRevealed()){
+                    if(CL.getBomb()){
+                        winflag=false;
+                        this.gameState="Lost";
+                    }
+                }
+            }
+        }
+
+        if(winflag){
+            System.out.println("We got here?");
+            this.gameState="Won";
         }
     }
 
@@ -317,13 +363,23 @@ public class Gridtiles {
                 CL.setRevealed();
             }
         }
-        this.DisplayMap();
     }
+    public void debugconceal(){
+        for(ArrayList<GridItem> RL:this.gridmap){
+            for(GridItem CL:RL){
+                CL.setConcealed();
+            }
+        }
+    }
+
     public static void main(String[] args) {
         Gridtiles Gameenv = new Gridtiles();
         Gameenv.initialisemap();
         Gameenv.initialiseStatus();
         Gameenv.sanitychecker();
+        Gameenv.debugreveal();
+        Gameenv.DisplayMap();
+        Gameenv.debugconceal();
         Gameenv.DisplayMap();
         Gameenv.gameRun();
 
@@ -340,9 +396,10 @@ public class Gridtiles {
     CHECKLIST LEFT:
     implement hidden / revealed //// DONE
     implement checking algo to reveal nearby zeroes //// DONE
-    implement user interaction
-    implement game over state
+    implement user interaction //// DONE
+    implement game over state //// DONE
     implement game win state
+    implement flag placer
     implement use of sanity checker to regen map if no bombs.
     implement change to sanity checker to also regen map if minimum number of bombs not implemented.
     implement catches for stupid user input

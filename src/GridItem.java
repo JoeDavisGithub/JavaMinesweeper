@@ -32,6 +32,9 @@ public class GridItem {
     public void setRevealed(){
         this.revealed=true;
     }
+    public void setConcealed(){
+        this.revealed=false;
+    }
     public boolean isRevealed(){
         return this.revealed;
     }
