@@ -16,6 +16,9 @@ public class GridItem {
             return 10;
         }
     }
+    public int gamePeek(){
+        return this.status;
+    }
     public void updateStatus(){
         this.status = this.status+1;
     }
@@ -29,9 +32,12 @@ public class GridItem {
     public void setRevealed(){
         this.revealed=true;
     }
+    public boolean isRevealed(){
+        return this.revealed;
+    }
     public GridItem(float decision){
         //System.out.println(decision);
-        if(decision==0){
+        if(decision<5){
             isBomb=true;
         }
     }
