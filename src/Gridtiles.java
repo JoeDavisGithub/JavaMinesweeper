@@ -71,6 +71,9 @@ public class Gridtiles {
                     case 10:
                         System.out.print("##");
                         break;
+                    case 11:
+                        System.out.print("⚑ ");
+                        break;
                     default:
                         System.out.print(CL.getStatus());
                         break;
@@ -183,17 +186,22 @@ public class Gridtiles {
         this.gridmap.get(15-y).get(x-1).updateStatus(44);
     }
 
-    public void gameSelector(int x, int y){
-        if(this.gridmap.get(15-y).get(x-1).getBomb()){
-            this.gridmap.get(15-y).get(x-1).setRevealed();
-            return;
-        }
-        if(this.gridmap.get(15-y).get(x-1).gamePeek()==0){
+    public void gameSelector(int x, int y,String mode){
+        if(Objects.equals(mode, "c")){
+            if(this.gridmap.get(15-y).get(x-1).getBomb()){
+                this.gridmap.get(15-y).get(x-1).setRevealed();
+                return;
+            }
+            if(this.gridmap.get(15-y).get(x-1).gamePeek()==0){
 
-            this.gameRevealer(x-1,15-y);
+                this.gameRevealer(x-1,15-y);
+            }
+            this.gridmap.get(15-y).get(x-1).setRevealed();
+            this.DisplayMap();
+        }else if(Objects.equals(mode, "f")){
+            this.gridmap.get(15-y).get(x-1).setMarked();
+            this.DisplayMap();
         }
-        this.gridmap.get(15-y).get(x-1).setRevealed();
-        this.DisplayMap();
     }
     public void gameRevealer(int x, int y){
         boolean topchecker = true;
@@ -310,14 +318,38 @@ public class Gridtiles {
     public void gameStep(){
         int xval=0,yval = 0;
         boolean prog=false;
+        String mode="";
         while(!prog) {
+            Scanner Uinput = new Scanner(System.in);
+            String uinputted ="";
+            boolean checkflag = false;
+            System.out.println("Would you like to check or flag a coordinate? (Enter c or f): ");
+            while (!checkflag) {
+                uinputted = Uinput.nextLine();
+                if(Objects.equals(uinputted, "c")){
+                    checkflag=true;
+                    mode=uinputted;
+                }else if(Objects.equals(uinputted, "f")){
+                    checkflag=true;
+                    mode=uinputted;
+                }else{
+                    System.out.println("This input is invalid, please enter c for check, or f for flag");
+                }
+            }
             System.out.print("Please enter an X coordinate between 1 and 15: ");
             xval = gameInteraction();
             System.out.print("Please enter a Y coordinate between 1 and 15: ");
             yval = gameInteraction();
             prog = isChecked(xval,yval);
         }
-        gameSelector(xval,yval);
+        if(mode.equals("c")){
+            gameSelector(xval,yval,"c");
+        }else if(mode.equals("f")){
+            gameSelector(xval,yval,"f");
+        }else{
+            System.out.println("Something has gone very wrong");
+        }
+
     }
 
     public void gameRun(){
@@ -398,11 +430,11 @@ public class Gridtiles {
     implement checking algo to reveal nearby zeroes //// DONE
     implement user interaction //// DONE
     implement game over state //// DONE
-    implement game win state
+    implement game win state //// DONE
     implement flag placer
     implement use of sanity checker to regen map if no bombs.
     implement change to sanity checker to also regen map if minimum number of bombs not implemented.
-    implement catches for stupid user input
+    implement catches for stupid user input /// done?
     implement for custom sized maps
  */
 

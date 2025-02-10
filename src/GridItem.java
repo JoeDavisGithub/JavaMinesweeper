@@ -13,7 +13,12 @@ public class GridItem {
             }
         }
         else{
-            return 10;
+            if(this.marked){
+                return 11;
+            }else{
+                return 10;
+            }
+
         }
     }
     public int gamePeek(){
@@ -43,5 +48,11 @@ public class GridItem {
         if(decision<5){
             isBomb=true;
         }
+    }
+    public boolean isMarked(){
+        return marked;
+    }
+    public void setMarked(){
+        this.marked = true;
     }
 }
